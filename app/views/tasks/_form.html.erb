@@ -1,0 +1,57 @@
+<%= form_with(model: task, local: true, class:"col-4") do |form| %>
+  <% if task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
+
+      <ul>
+      <% task.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name, class:"form-label" %>
+    <%= form.text_field :name, class:"form-control" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :content, class:"form-label" %>
+    <%= form.text_field :content, class:"form-control" %>
+
+  </div>
+
+  <div class="field">
+    <%= form.label :deadline, class:"form-label" %>
+    <%= form.date_field :deadline, class:"form-control" %>
+
+  </div>
+
+  <div class="field">
+    <%= form.label :status, class:"form-label" %>
+    <%= form.select(:status, [['unstarted', 'unstarted'], ['in progress', 'in progress'], ['completed', 'completed']], {}, class: "form-select") %>
+  </div>
+
+  <div class="field">
+    <%= form.label :priority, class:"form-label" %>
+    <%= form.select :priority, Task.priorities.keys.map{ |key|[key.titleize, key] }, {}, class: "form-select" %>
+
+  </div>
+
+  <div class="field">
+    <%= form.label :priority, class:"form-label" %>
+    <%= form.select :priority, Task.priorities.keys.map{ |key|[key.titleize, key] }, {}, class: "form-select" %>
+  </div>
+
+  <% Tag.all.each do |tag| %>
+  <div class="field form-check-inline">
+    <%= form.check_box :tag_ids, { multiple: true, checked: task.tags.find_by(id: tag.id).present?, disabled: tag[:disabled], include_hidden: false }, tag[:id], class:"form-check-input" %>
+    <%= form.label :tag_ids, tag.name, value: tag[:id], class:"form-check-label" %>
+  </div>
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit class:"btn btn-primary" %>
+  </div>
+<% end %>
